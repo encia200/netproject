@@ -1,0 +1,161 @@
+.container {
+  background-color: #FFFFFF;
+  position: relative;
+  width: 1000px;
+  height: 700px;
+  margin: auto;
+}
+
+.myScreen {
+  background-color: #e0dede;
+  position: relative;
+  width: 1000px;
+  height: 562px;
+}
+
+.participants {
+  background-color: #FFFFFF;
+  position: relative;
+  width: 300px;
+  height: 169px;
+}
+
+.chat {
+  background-color: #060366;
+  position: relative;
+  width: 700px;
+  height: 150px;
+  padding-top: 5px;
+}
+
+#chat-output {
+  background-color: #FFFFFF;
+  margin: auto;
+  overflow: scroll;
+  font-family: "Roboto", sans-serif;
+  color: black;
+  width: 690px;
+  height: 100px;
+  text-align: left;
+}
+
+.chat-input {
+  position: relative;
+  width: 690px;
+  height: 30px;
+  margin: auto;
+}
+
+.chat-input input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 300px;
+  border: 0;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 15px;
+  position: relative;
+  width: 560px;
+  height: 100%;
+}
+
+#sendBt {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #2d5ab5;
+  border: 0;
+  padding: 5px;
+  color: #FFFFFF;
+  font-size: 15px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  position: relative;
+  width: 60px;
+  height: 100%;
+}
+
+#questionBt {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #2d5ab5;
+  border: 0;
+  padding: 5px;
+  color: #FFFFFF;
+  font-size: 15px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  position: relative;
+  width: 60px;
+  height: 100%;
+}
+
+.list {
+  background-color: #060366;
+  position: relative;
+  width: 300px;
+  height: 150px;
+  overflow: scroll;
+  padding-top: 5px;
+}
+
+#list-tb, #list-bd {
+  font-family: "Roboto", sans-serif;
+  color: #FFFFFF;
+  width: 300px;
+  margin: auto;
+  text-align: center;
+}
+
+.toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 62px;
+  height: 32px;
+  display: inline-block;
+  position: relative;
+  border-radius: 50px;
+  overflow: hidden;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: #707070;
+  transition: background-color ease 0.3s;
+  top: -1040px;
+  left: 930px;
+}
+
+.toggle:before {
+  content: "on off";
+  display: block;
+  position: absolute;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  font: 10px/28px Helvetica;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-indent: -22px;
+  word-spacing: 37px;
+  color: #fff;
+  text-shadow: -1px -1px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+}
+
+.toggle:checked {
+  background-color: #769be8;
+}
+
+.toggle:checked:before {
+  left: 32px;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html id="room" lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link href="css/room.css" rel="stylesheet">
+  <script src="//code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/socket.io.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/RTCPeerConnection-v1.5.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/MultiStreamsMixer.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/getScreenId.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/FileSelector.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/getHTMLMediaElement.js"></script>
+</head>
+
+<body>
+  <article>
+
+    <div class="container">
+
+      <div id="myScreen" class="myScreen"></div>
+      <div id="participants" class="participants" style="position:relative; top:-562px; left:700px;"></div>
+
+      <div id="chat" class="chat" style="position:relative; top:-169px;">
+        <table id="chat-output" class="chat-output" style="top:5px;"> </table>
+        <div id="chat-input" class="chat-input" style="top:5px;">
+          <input type="text" id="chat-message" placeholder="Input Message." disabled/>
+          <button id="sendBt" value="send">전송</button>
+          <button id="questionBt" value="question" style="top:2px;" onclick="question_click();"><img id="btnImg" src="img/question.png"></button>
+        </div>
+      </div>
+
+    
+      <div id="list" class="list" style="position:relative; top:-324px; left:700px;">
+        <table id="list-tb" class="list-tb">
+          <thead>
+            <tr>
+              <th scope="col">이름</th>
+              <th scope="col">진도</th>
+              <th scope="col">질문</th>
+              <th scope="col">    </th>
+            </tr>
+          </thead>
+          <tbody id='list-bd'>
+          </tbody>
+        </table>
+      </div>
+      <label class="switch">
+        <input class="toggle" id="toggle" type="checkbox" checked onclick="toggle_visibility('participants')" style="visibility:'visible';">
+      </label>
+    </div>
+  </article>
+</body>
+<script src="js/mixbroadcast.js"></script>
+<script src="js/mixbroadcast-ui.js"></script>
+</html>

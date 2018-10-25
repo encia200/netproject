@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html id="home" lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Coding TV</title>
+  <style>
+    .home-page {
+      width: 100% padding: 0;
+      margin: auto;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .roomList-form {
+      position: relative;
+      background: #FFFFFF;
+      width: 1200px;
+      height: 600px;
+      margin: 10px auto 0;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    .roomList-form button {
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      outline: 0;
+      background: #2d5ab5;
+      width: 100px;
+      border: 0;
+      padding: 10px;
+      color: #FFFFFF;
+      font-size: 15px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
+    }
+
+    table {
+      font-size: 15px;
+      width: 1000px;
+      margin: auto;
+      border-top: 1px solid #444444;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #edf1f7;
+      border-top: 2px solid #444444;
+      border-bottom: 2px solid #444444;
+      padding: 10px;
+    }
+
+    td {
+      height: 20px;
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+    }
+
+    body {
+      background-color: #AECDFF
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+  <div class="home-page">
+    <p>Coding TV</p>
+    <form class="roomList-form">
+      <p>강의실 목록</p>
+      <p id="user_name" hidden/>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">번호</th>
+            <th scope="col">강사명</th>
+            <th scope="col">강의명</th>
+            <th scope="col">강의실 제목</th>
+            <th scope="col">수강 인원</th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <p><button type="button" onclick="clickBtn('lectureList.html');">강의 목록</button>
+        <button id="roomRegistBtn" type="button" onclick="clickBtn('roomRegister.html');">강의실 등록</button>
+        <button id="myRoomBtn" type="button" onclick="clickBtn('myRoom.html');">나의 강의</button></p>
+    </form>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+  var wsUri = "wss://netproject.ga:2053/CheckClassList";
+  // var output;
+
+  function init() {
+    // output = document.getElementById("output");
+    testWebSocket();
+  }
+
+  function testWebSocket() {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) {
+      onOpen(evt)
+    };
+    websocket.onclose = function(evt) {
+      onClose(evt)
+    };
+    websocket.onmessage = function(evt) {
+      onMessage(evt)
+    };
+    websocket.onerror = function(evt) {
+      onError(evt)
+    };
+  }
+
+  function onOpen(evt) {
+    // writeToScreen("CONNECTED");
+    doSend(getUrlParameter('hash'));
+  }
+
+  function onClose(evt) {
+    // writeToScreen("DISCONNECTED");
+  }
+
+  function onMessage(evt) {
+    // writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+    console.log(evt.data);
+    var jsonData = JSON.parse(evt.data);
+    console.log(jsonData);
+    $(function() {
+      var tr;
+      var rooms = jsonData.rooms;
+      console.log(jsonData.rooms);
+      for (var room in rooms) {
+        tr = $('<tr/>');
+        tr.append("<td>" + rooms[room].id + "</td>");
+        tr.append("<td>" + rooms[room].teacher_name + "</td>");
+        tr.append("<td hidden>" + rooms[room].lecture_id + "</td>");
+        tr.append("<td hidden id='prog_r" + rooms[room].id + "'>" + rooms[room].lecture_progress + "</td>");
+        tr.append("<td>" + rooms[room].lecture_name + "</td>");
+        tr.append("<td>" + rooms[room].name + "</td>");
+        tr.append("<td>" + rooms[room].now_num + "/" + rooms[room].total_num + "</td>");
+        tr.append('<td><button type="button" id="r' + rooms[room].id + '" name="'+ rooms[room].name + '" class="enter_button">입장</button></td>');
+        $('table').append(tr);
+      }
+      $('#user_name').text(jsonData.mem_data.mem_name);
+    });
+  }
+
+  function onError(evt) {
+    // writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+  }
+
+  function doSend(message) {
+    // writeToScreen("SENT: " + message);
+    websocket.send(message);
+  }
+
+  // function writeToScreen(message) {
+  //   var pre = document.createElement("p");
+  //   pre.style.wordWrap = "break-word";
+  //   pre.innerHTML = message;
+  //   output.appendChild(pre);
+  // }
+  window.addEventListener("load", init, false);
+
+  $(function() {
+    if (getUrlParameter('state') == 'student')
+      $('#roomRegistBtn').css('display', 'none');
+
+    else if (getUrlParameter('state') == 'teacher')
+      $('#myRoomBtn').css('display', 'none');
+  })
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : sParameterName[1];
+      }
+    }
+  };
+
+  function clickBtn(url) {
+    location.href = url + '?hash=' + getUrlParameter('hash') + '&state=' + getUrlParameter('state');
+  }
+
+  $('tbody').on('click', '.enter_button', function() {
+    location.href = 'room.html#' +
+      'room_name=' + this.name +
+      '&hash=' + getUrlParameter('hash') +
+      '&state=' + getUrlParameter('state') +
+      '&user_name=' + $('#user_name').text() +
+      '&user_prog=' + $('#prog_' + this.id).text();
+  });
+</script>
+
+<!-- <h2>WebSocket Test</h2> -->
+
+<!-- <div id="output"></div> -->
+
+</html>

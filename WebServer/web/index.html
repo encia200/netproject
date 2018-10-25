@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html id="logIn" lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Coding TV</title>
+  <style>
+    .logIn-page {
+      width: 100%;
+      margin: auto;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .logIn-form {
+      position: relative;
+      z-index: 1;
+      background: #FFFFFF;
+      width: 400px;
+      margin: auto;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      font-size: 15px;
+      font-weight: normal;
+    }
+
+    .logIn-form .input {
+      font-family: "Roboto", sans-serif;
+      outline: 0;
+      background: #f2f2f2;
+      width: 300px;
+      border: 0;
+      margin: 0;
+      padding: 15px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    .logIn-form button {
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      outline: 0;
+      background: #2d5ab5;
+      width: 100px;
+      border: 0;
+      padding: 15px;
+      margin: 20px;
+      color: #FFFFFF;
+      font-size: 15px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
+    }
+
+    .logIn-form button:hover,
+    .form button:active,
+    .form button:focus {
+      background: #5a7fc9;
+    }
+
+    .userType-form {
+      font-family: "Roboto", sans-serif;
+      margin: auto;
+      font-size: 15px;
+    }
+
+    .userType-form input {
+      font-family: "Roboto", sans-serif;
+      width: 30px;
+      margin: auto;
+      font-size: 15px;
+    }
+
+    body {
+      background-color: #AECDFF;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+  <div class="logIn-page">
+    <h1>Coding TV</h1>
+    <form class="logIn-form">
+      <div class="userType-form">
+        <input type="radio" name="userType" value="student">학생</input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="userType" value="teacher">강사</input>
+      </div>
+      <p><img src="img/id.png"></img>
+        <input class="input" type="text" id="userID" placeholder="아이디" /></p>
+      <p><img src="img/pw.png"></img>
+        <input class="input" type="password" id="userPW" placeholder="비밀번호" /></p>
+      <p><button type="button" id="login">로그인</button>
+      <button type="button" onclick="location.href='signUp.html'">회원가입</button></p>
+    </form>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+  var wsUri = "wss://netproject.ga:2053/login";
+  // var output;
+
+  function init() {
+    // output = document.getElementById("output");
+    testWebSocket();
+  }
+
+  function testWebSocket() {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) {
+      onOpen(evt)
+    };
+    websocket.onclose = function(evt) {
+      onClose(evt)
+    };
+    websocket.onmessage = function(evt) {
+      onMessage(evt)
+    };
+    websocket.onerror = function(evt) {
+      onError(evt)
+    };
+  }
+
+  function onOpen(evt) {
+    // writeToScreen("CONNECTED");
+
+    function onLoginBtnClick() {
+      var id = document.getElementById('userID').value;
+      var pwd = document.getElementById('userPW').value;
+      var aJson = new Object();
+
+      aJson.id = id;
+      aJson.password = pwd;
+      var Json_str = JSON.stringify(aJson);
+      doSend(Json_str);
+      // writeToScreen(Json_str);
+    }
+    document.getElementById('login').addEventListener('click', onLoginBtnClick);
+  }
+
+  function onClose(evt) {
+    // writeToScreen("DISCONNECTED");
+  }
+
+  function onMessage(evt) {
+    // writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+    if (evt.data == "FAIL") { // 실패시
+      alert("아이디와 비밀번호를 확인하세요.");
+    } else { // 성공시
+      var hash = evt.data.split('/')[1];
+      var state = $(":input:radio[name=userType]:checked").val();
+
+      location.href = 'home.html?hash=' + hash + "&state=" + state;
+    }
+    //websocket.close();
+  }
+
+  function onError(evt) {
+    // writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+  }
+
+  function doSend(message) {
+    // writeToScreen("SENT: " + message);
+    websocket.send(message);
+  }
+
+  function writeToScreen(message) {
+    var pre = document.createElement("p");
+    pre.style.wordWrap = "break-word";
+    pre.innerHTML = message;
+    output.appendChild(pre);
+  }
+
+  window.addEventListener("load", init, false);
+</script>
+
+<!-- <h2>WebSocket Test</h2> -->
+
+<!-- <div id="output"></div> -->
+
+</html>

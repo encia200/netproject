@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html id="signUp" lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Coding TV</title>
+  <style>
+    .signUp-page {
+      width: 100%;
+      margin: auto;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .signUp-form {
+      position: relative;
+      z-index: 1;
+      background: #FFFFFF;
+      max-width: 400px;
+      margin: auto;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      font-size: 15px;
+      font-weight: normal;
+    }
+
+    .signUp-form input {
+      font-family: "Roboto", sans-serif;
+      outline: 0;
+      background: #f2f2f2;
+      width: 300px;
+      border: 0;
+      margin: 0;
+      padding: 15px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    .signUp-form button {
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      outline: 0;
+      background: #2d5ab5;
+      width: 100px;
+      border: 0;
+      padding: 15px;
+      margin: 20px;
+      color: #FFFFFF;
+      font-size: 15px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
+    }
+
+    .userType-form input {
+      font-family: "Roboto", sans-serif;
+      width: 30px;
+      margin: auto;
+      font-size: 15px;
+    }
+
+    .signUp-form button:hover,
+    .form button:active,
+    .form button:focus {
+      background: #5a7fc9;
+    }
+
+    body {
+      background-color: #AECDFF;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="signUp-page">
+    <h1>Coding TV</h1>
+    <form class="signUp-form" name=statusRadio>
+      <div class="userType-form">
+        <input type="radio" name="userType" value="student">학생</input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="userType" value="teacher">강사</input>
+      </div>
+      <p><img src="img/name.png"></img>
+        <input type="text" id="signName" placeholder="이름" /></p>
+      <p><img src="img/id.png"></img>
+        <input type="text" id="signID" placeholder="아이디" /></p>
+      <p><img src="img/pw.png"></img>
+        <input type="password" id="signPW" placeholder="비밀번호" /></p>
+      <p><button type="button" id="signUpBtn">가입하기</button></p>
+    </form>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+  var wsUri = "wss://netproject.ga:2053/signUp";
+  // var output;
+
+  function init() {
+    // output = document.getElementById("output");
+    testWebSocket();
+  }
+
+  function testWebSocket() {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) {
+      onOpen(evt)
+    };
+    websocket.onclose = function(evt) {
+      onClose(evt)
+    };
+    websocket.onmessage = function(evt) {
+      onMessage(evt)
+    };
+    websocket.onerror = function(evt) {
+      onError(evt)
+    };
+  }
+
+  function onOpen(evt) {
+    // writeToScreen("CONNECTED");
+
+    function onSignUpBtnClick() {
+      var id = document.getElementById('signID').value;
+      var pwd = document.getElementById('signPW').value;
+      var name = document.getElementById('signName').value;
+      var status;
+      for(var i=0; i < statusRadio.userType.length; i++){
+                if(statusRadio.userType[i].checked)
+                  status = i;
+      }
+      var aJson = new Object();
+
+      aJson.id = id;
+      aJson.password = pwd;
+      aJson.name = name;
+      aJson.status = status;
+      var Json_str = JSON.stringify(aJson);
+      doSend(Json_str);
+      // writeToScreen(Json_str);
+    }
+    document.getElementById('signUpBtn').addEventListener('click', onSignUpBtnClick);
+  }
+
+  function onClose(evt) {
+    // writeToScreen("DISCONNECTED");
+  }
+
+  function onMessage(evt) {
+    // writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+    if (evt.data == "SUCCESS") { // 성공시
+      alert("회원가입에 성공하였습니다.");
+      location.href = 'index.html';
+    } else { // 실패시
+      alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+    }
+    //websocket.close();
+  }
+
+  function onError(evt) {
+    // writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+  }
+
+  function doSend(message) {
+    // writeToScreen("SENT: " + message);
+    websocket.send(message);
+  }
+
+  function writeToScreen(message) {
+    var pre = document.createElement("p");
+    pre.style.wordWrap = "break-word";
+    pre.innerHTML = message;
+    output.appendChild(pre);
+  }
+
+  window.addEventListener("load", init, false);
+</script>
+
+<!-- <h2>WebSocket Test</h2> -->
+
+<!-- <div id="output"></div> -->
+
+</html>

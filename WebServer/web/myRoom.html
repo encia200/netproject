@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html id="myroom" lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Coding TV</title>
+  <style>
+    .myRoom-page {
+      width: 100% padding: 0;
+      margin: auto;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .myRoom-form {
+      position: relative;
+      background: #FFFFFF;
+      width: 1200px;
+      height: 600px;
+      margin: 10px auto 0;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    .myRoom-form button {
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      outline: 0;
+      background: #2d5ab5;
+      width: 100px;
+      border: 0;
+      padding: 10px;
+      color: #FFFFFF;
+      font-size: 15px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
+    }
+    .myRoom-form input {
+      font-size: 15px;
+      position: relative;
+      left: 30px;
+    }
+
+    table {
+      font-size: 15px;
+      width: 1000px;
+      margin: auto;
+      border-top: 1px solid #444444;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #edf1f7;
+      border-top: 2px solid #444444;
+      border-bottom: 2px solid #444444;
+      padding: 10px;
+    }
+
+    td {
+      height: 20px;
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+    }
+
+    body {
+      background-color: #AECDFF
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+  <div class="myRoom-page">
+    <p>Coding TV</p>
+    <form class="myRoom-form">
+      <p>내 강의실</p>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">번호</th>
+            <th scope="col">강사명</th>
+            <th scope="col">강의명</th>
+            <th scope="col">설명</th>
+            <th scope="col">전체 차수</th>
+            <th scope="col">수강 차수</th>
+            <th scope="col">진도율</th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <td scope="row">1</td>
+            <td>강사a</td>
+            <td>c언어</td>
+            <td>20</td>
+            <td><p><input id="inputProg" type="text" size="5" style="display:none"></p>
+              <p id="viewProg" style="display:block">5</p></td>
+            <td>25%</td>
+            <td><button id="progUpdateBt" type="button" onclick="progUpdate();">수정</td>
+            <td><button id="progSaveBt" type="button" onclick="progSave();">저장</td>
+          </tr> -->
+
+        </tbody>
+      </table>
+      <p><button id="myRoomCloseBt" type="button" onclick="clickBtn('home.html');">목록으로</button></p>
+    </form>
+  </div>
+</body>
+<script>
+var wsUri = "wss://netproject.ga:2053/MyLectureList";
+// var output;
+
+function init() {
+  // output = document.getElementById("output");
+  testWebSocket();
+}
+
+function testWebSocket() {
+  websocket = new WebSocket(wsUri);
+  websocket.onopen = function(evt) {
+    onOpen(evt)
+  };
+  websocket.onclose = function(evt) {
+    onClose(evt)
+  };
+  websocket.onmessage = function(evt) {
+    onMessage(evt)
+  };
+  websocket.onerror = function(evt) {
+    onError(evt)
+  };
+}
+
+function onOpen(evt) {
+  // writeToScreen("CONNECTED");
+
+  var aJson = new Object();
+  aJson.type = "select";
+  aJson.hash = getUrlParameter('hash');
+  doSend(JSON.stringify(aJson));
+}
+
+function onClose(evt) {
+  console.log(evt);
+  // writeToScreen("DISCONNECTED");
+}
+
+function onMessage(evt) {
+  // writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+  console.log(evt.data);
+  if(evt.data == 'SUCCESS')
+  {
+    console.log('수정 성공');
+  }
+  else if(evt.data == 'FAIL')
+  {
+    console.log('수정 실패');
+  }
+  else
+  {
+    var jsonData = JSON.parse(evt.data);
+    console.log(jsonData);
+      $(function () {
+          var tr;
+          var lectures = jsonData.lectures;
+          console.log(jsonData.lectures);
+          for(var lecture in lectures)
+          {
+              tr = $('<tr/>');
+              tr.append("<td>" + lectures[lecture].id + "</td>");
+              tr.append("<td>" + lectures[lecture].teacher_name + "</td>");
+              tr.append("<td>" + lectures[lecture].name + "</td>");
+              tr.append("<td>" + lectures[lecture].content + "</td>");
+              tr.append("<td id='total-" + lectures[lecture].pid + "'>" + lectures[lecture].total_progress + "</td>");
+              tr.append("<td><p><input type='text' id='input-" + lectures[lecture].pid + "' size='5' style='display:none' value='" + lectures[lecture].progress + "'>" + "</p>" +
+                        "<p id='text-" + lectures[lecture].pid + "'>" + lectures[lecture].progress + "</p></td>");
+              tr.append("<td id='prog-" + lectures[lecture].pid + "'>" + lectures[lecture].progress / lectures[lecture].total_progress * 100 + "%</td>");
+              tr.append("<td><button type='button' id='" + lectures[lecture].pid + "'  class='progUpdateBtn' value='modify'>수정</td>");
+              $('table').append(tr);
+            }
+          })
+        }
+}
+
+function onError(evt) {
+  // writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+}
+
+function doSend(message) {
+  // writeToScreen("SENT: " + message);
+  websocket.send(message);
+}
+
+function writeToScreen(message) {
+  var pre = document.createElement("p");
+  pre.style.wordWrap = "break-word";
+  pre.innerHTML = message;
+  output.appendChild(pre);
+}
+
+window.addEventListener("load", init, false);
+
+function progUpdate(id, state, total_progress){
+  if(state == 'modify')
+  {
+    $('#input-' + id).css('display', 'block');
+    $('#text-' + id).css('display', 'none');
+    $('#' + id).attr('value', 'save');
+    $('#' + id).text('저장');
+  }
+  else if(state == 'save')
+  {
+    $('#input-' + id).css('display', 'none');
+    $('#text-' + id).css('display', 'block');
+
+    $('#' + id).attr('value', 'modify');
+    $('#' + id).text('수정');
+
+    var changeVal = $('#input-' + id).val();
+    $('#text-' + id).text(changeVal);
+    $('#prog-' + id).text(changeVal / total_progress * 100 + '%');
+    progSave(id, changeVal);
+  }
+}
+
+function progSave(id, changeVal){
+  console.log(id, changeVal);
+
+  var aJson = new Object();
+  aJson.type = "update";
+  aJson.id = id;
+  aJson.changeVal = changeVal;
+  doSend(JSON.stringify(aJson));
+}
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+function clickBtn(url){
+  location.href = url + '?hash=' + getUrlParameter('hash') + '&state=' + getUrlParameter('state');
+}
+
+$('tbody').on('click', '.progUpdateBtn', function(){
+  var total_progress = $('#total-' + this.id).html();
+  console.log(total_progress);
+  progUpdate(this.id, this.value, total_progress);
+})
+</script>
+
+<!-- <h2>WebSocket Test</h2> -->
+
+<!-- <div id="output"></div> -->
+
+</html>
