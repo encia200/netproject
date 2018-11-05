@@ -1,7 +1,6 @@
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/install/local.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/install/strip.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/install.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/list_install_components.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/edit_cache.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/https_examples.dir
-/Users/wie_jy/netproject/WebServer/build/CMakeFiles/rebuild_cache.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/install/local.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/install/strip.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/install.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/list_install_components.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/rebuild_cache.dir
+/Users/wie/netproject/WebServer/build/CMakeFiles/edit_cache.dir

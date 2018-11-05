@@ -1,4 +1,4 @@
-# Install script for directory: /Users/wie_jy/netproject/WebServer
+# Install script for directory: /Users/wie/netproject/WebServer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/simple-web-server" TYPE FILE FILES
-    "/Users/wie_jy/netproject/WebServer/server_http.hpp"
-    "/Users/wie_jy/netproject/WebServer/server_https.hpp"
-    "/Users/wie_jy/netproject/WebServer/crypto.hpp"
-    "/Users/wie_jy/netproject/WebServer/utility.hpp"
-    "/Users/wie_jy/netproject/WebServer/status_code.hpp"
+    "/Users/wie/netproject/WebServer/server_http.hpp"
+    "/Users/wie/netproject/WebServer/server_https.hpp"
+    "/Users/wie/netproject/WebServer/crypto.hpp"
+    "/Users/wie/netproject/WebServer/utility.hpp"
+    "/Users/wie/netproject/WebServer/status_code.hpp"
     )
 endif()
 
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/wie_jy/netproject/WebServer/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/wie/netproject/WebServer/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
